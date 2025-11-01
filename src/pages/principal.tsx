@@ -1,8 +1,8 @@
 import Autor from '../components/autor'
 import Grupo from '../components/grupo'
+import Professora from '../components/professora'
+import Resumo from '../components/resumo'
 import { BookOpenText } from 'lucide-react'
-
-
 
 export default function Principal() {
     return(
@@ -14,8 +14,10 @@ export default function Principal() {
                 <h4>Um clássico da literatura brasileira</h4>
                 <button>Explore a Obra</button>
             </div>
-            <Grupo/>
+            <Professora/>
+            <Resumo/>
             <Autor/>
+            <Grupo/>
         </>
     )
 }

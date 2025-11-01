@@ -1,11 +1,13 @@
 import { Routes, Route} from 'react-router-dom'
+import Principal from './pages/principal'
 
 function App() {
   return (
     <>
       <Routes>
-        <Route></Route>
-
+        <Route path='/' element={<Principal/>}>
+        
+        </Route>
       </Routes>
   
     </>
