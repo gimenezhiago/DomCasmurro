@@ -23,7 +23,7 @@ export default function BotaoPersonagens() {
               href="/personagens" 
               className="btn btn-lg text-white shadow-lg px-5 py-3"
               style={{
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                background: 'red',
                 border: 'none',
                 fontSize: '1.2rem'
               }}

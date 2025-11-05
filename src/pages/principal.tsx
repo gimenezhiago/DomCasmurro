@@ -12,7 +12,7 @@ export default function Principal() {
       <motion.header
         className="text-white text-center py-5"
         style={{
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+          background: "red",
         }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -54,7 +54,7 @@ export default function Principal() {
       <motion.footer
         className="text-white text-center py-4"
         style={{
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+          background: "red",
         }}
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}

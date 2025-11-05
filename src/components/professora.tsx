@@ -44,7 +44,7 @@ export default function Professora() {
                       width: "120px",
                       height: "120px",
                       background:
-                        "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                        "red",
                     }}
                   >
                     <User size={60} className="text-white" />

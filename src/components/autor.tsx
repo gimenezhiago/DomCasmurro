@@ -44,7 +44,7 @@ export default function Autor() {
                       width: "150px",
                       height: "150px",
                       background:
-                        "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+                        "red",
                     }}
                   >
                     <User size={80} />
