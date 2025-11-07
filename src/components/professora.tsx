@@ -17,7 +17,7 @@ export default function Professora() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-center mb-4 text-white">
+          <h2 className="text-center mb-4">
             <GraduationCap
               size={32}
               className="me-2"

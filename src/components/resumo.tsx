@@ -17,7 +17,7 @@ export default function Resumo() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-center mb-4 text-white">
+            <h2 className="text-center mb-4">
               <FileText size={32} className="me-2" style={{display: 'inline-block', verticalAlign: 'middle'}} />
               Resumo do Livro
             </h2>
