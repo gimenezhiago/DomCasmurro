@@ -1,37 +1,56 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { User, Mail, FileText, MessageSquare, ArrowLeft, X } from "lucide-react";
+import { User, Mail, FileText, MessageSquare, ArrowLeft, X, Users } from "lucide-react";
 import { Link } from "react-router-dom";
-import personagens from "../components/personagensText";
+import personagens from "../components/personagensText.ts";
 
-type Texto = {
+interface TextoConteudo {
   titulo: string;
   conteudo: string;
-};
+}
 
-type Personagem = {
+interface Personagem {
   id: number;
   nome: string;
   nomeCompleto: string;
   descricao: string;
   cor: string;
   textos: {
-    carta: Texto;
-    artigo: Texto;
-    entrevista: Texto;
+    carta: TextoConteudo;
+    artigo: TextoConteudo;
+    entrevista: TextoConteudo;
   };
+}
+
+interface TextoSelecionado extends TextoConteudo {
+  tipo: "carta" | "artigo" | "entrevista";
+}
+
+type TipoTexto = "carta" | "artigo" | "entrevista";
+
+const fadeIn = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
 };
+
+const BOTOES_CONFIG = [
+  { tipo: "carta" as const, label: "Carta", icone: Mail, gradient: "from-red-500 to-rose-600" },
+  { tipo: "artigo" as const, label: "Artigo", icone: FileText, gradient: "from-rose-500 to-pink-600" },
+  { tipo: "entrevista" as const, label: "Entrevista", icone: MessageSquare, gradient: "from-pink-500 to-red-600" },
+];
 
 export default function Personagens() {
   const [personagemSelecionado, setPersonagemSelecionado] = useState<Personagem | null>(null);
-  const [textoSelecionado, setTextoSelecionado] = useState<
-    { tipo: "carta" | "artigo" | "entrevista"; titulo: string; conteudo: string } | null
-  >(null);
-  const [modalAberto, setModalAberto] = useState<boolean>(false);
+  const [textoSelecionado, setTextoSelecionado] = useState<TextoSelecionado | null>(null);
+  const [modalAberto, setModalAberto] = useState(false);
 
-  const abrirTexto = (personagem: Personagem, tipo: "carta" | "artigo" | "entrevista") => {
+  const abrirTexto = (personagem: Personagem, tipo: TipoTexto) => {
     setPersonagemSelecionado(personagem);
-    setTextoSelecionado({ tipo, ...personagem.textos[tipo] });
+    setTextoSelecionado({
+      tipo,
+      titulo: personagem.textos[tipo].titulo,
+      conteudo: personagem.textos[tipo].conteudo,
+    });
     setModalAberto(true);
   };
 
@@ -43,177 +62,167 @@ export default function Personagens() {
     }, 300);
   };
 
-  const getIconeTipo = (tipo?: string) => {
-    switch (tipo) {
-      case "carta":
-        return <Mail size={20} />;
-      case "artigo":
-        return <FileText size={20} />;
-      case "entrevista":
-        return <MessageSquare size={20} />;
-      default:
-        return null;
-    }
-  };
-
   return (
-    <div
-      style={{
-        background: "linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%)",
-        minHeight: "100vh",
-        paddingTop: "2rem",
-        paddingBottom: "2rem",
-      }}
-    >
-      <div className="container">
-        <Link
-          to="/"
-          className="btn text-white mb-4 shadow"
-          style={{
-            background: "rgba(255, 255, 255, 0.2)",
-            backdropFilter: "blur(10px)",
-            border: "none",
-            textDecoration: "none",
-          }}
-        >
-          <ArrowLeft size={20} className="me-2" style={{ display: "inline-block", verticalAlign: "middle" }} />
-          Voltar
-        </Link>
-
-        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center mb-5">
-          <h1 className="display-4 text-white mb-3">🎭 Personagens</h1>
-          <p className="lead text-white">Conheça os personagens principais e seus textos</p>
+    <section className="min-h-screen bg-gradient-to-br from-rose-50 via-red-50 to-pink-50 py-10">
+      <div className="container mx-auto px-6">
+        {/* Botão Voltar */}
+        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 mb-8"
+          >
+            <ArrowLeft size={20} />
+            Voltar para Home
+          </Link>
         </motion.div>
 
-        <div className="row g-4">
-          {Array.isArray(personagens) &&
-            personagens.map((personagem: Personagem, index: number) => (
+        {/* Header */}
+        <motion.div
+          className="text-center mb-12"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={fadeIn}
+        >
+          <motion.div
+            className="inline-flex items-center gap-3 bg-white/80 backdrop-blur-sm rounded-2xl px-8 py-4 shadow-lg mb-6"
+            whileHover={{ scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <div className="p-3 bg-gradient-to-r from-red-500 to-rose-600 rounded-xl">
+              <Users size={36} className="text-white" />
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-red-600 to-rose-700 bg-clip-text text-transparent">
+              Personagens
+            </h1>
+          </motion.div>
+          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            Conheça os personagens principais e explore suas histórias através de{" "}
+            <span className="font-semibold text-red-600">cartas</span>,{" "}
+            <span className="font-semibold text-rose-600">artigos</span> e{" "}
+            <span className="font-semibold text-pink-600">entrevistas</span> exclusivas.
+          </p>
+        </motion.div>
+
+        {/* Grid de Personagens */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+          {personagens.map((personagem, index) => (
+            <motion.div
+              key={personagem.id}
+              variants={fadeIn}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ delay: index * 0.1 }}
+              className="flex"
+            >
               <motion.div
-                key={personagem.id}
-                className="col-12 col-md-4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.2 }}
+                className="group flex-1 bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
               >
-                <motion.div
-                  className="card h-100 shadow-lg"
-                  style={{ background: "rgba(255, 255, 255, 0.95)", backdropFilter: "blur(10px)", border: "none" }}
-                  whileHover={{ scale: 1.03 }}
-                >
-                  <div className="card-body p-4">
-                    <div className="text-center mb-3">
-                      <div
-                        className="rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-                        style={{ width: "100px", height: "100px", background: personagem.cor }}
-                      >
-                        <User size={50} className="text-white" />
-                      </div>
-                      <h3 className="mb-1">{personagem.nome}</h3>
-                      <p className="text-muted small mb-0">{personagem.nomeCompleto}</p>
+                <div className="p-6 flex flex-col h-full text-center">
+                  <motion.div
+                    className="relative mb-5 mx-auto"
+                    whileHover={{ rotate: [0, -5, 5, 0] }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <div
+                      className="w-24 h-24 rounded-2xl flex items-center justify-center shadow-lg transition-transform duration-300 group-hover:scale-110"
+                      style={{ background: personagem.cor }}
+                    >
+                      <User size={48} className="text-white drop-shadow-sm" />
                     </div>
+                  </motion.div>
 
-                    <p className="text-muted text-center mb-4" style={{ fontSize: "0.9rem" }}>
-                      {personagem.descricao}
-                    </p>
+                  <h3 className="text-2xl font-bold text-gray-800 mb-1">{personagem.nome}</h3>
+                  <p className="text-sm text-gray-500 mb-3 font-medium">{personagem.nomeCompleto}</p>
 
-                    <div className="d-grid gap-2">
+                  <p className="text-gray-600 mb-6 text-sm leading-relaxed flex-grow">
+                    {personagem.descricao}
+                  </p>
+
+                  <div className="space-y-3 mt-auto">
+                    {BOTOES_CONFIG.map(({ tipo, label, icone: Icone, gradient }) => (
                       <motion.button
-                        type="button"
-                        className="btn btn-outline-primary d-flex align-items-center justify-content-center"
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={() => abrirTexto(personagem, "carta")}
+                        key={tipo}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className={`w-full flex items-center justify-center gap-3 py-3 px-4 bg-gradient-to-r ${gradient} text-white font-semibold rounded-xl shadow-md hover:shadow-lg`}
+                        onClick={() => abrirTexto(personagem, tipo)}
                       >
-                        <Mail size={18} className="me-2" />
-                        Carta
+                        <Icone size={18} />
+                        {label}
                       </motion.button>
-
-                      <motion.button
-                        type="button"
-                        className="btn btn-outline-success d-flex align-items-center justify-content-center"
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={() => abrirTexto(personagem, "artigo")}
-                      >
-                        <FileText size={18} className="me-2" />
-                        Artigo de Opinião
-                      </motion.button>
-
-                      <motion.button
-                        type="button"
-                        className="btn btn-outline-info d-flex align-items-center justify-content-center"
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={() => abrirTexto(personagem, "entrevista")}
-                      >
-                        <MessageSquare size={18} className="me-2" />
-                        Entrevista
-                      </motion.button>
-                    </div>
+                    ))}
                   </div>
-                </motion.div>
+                </div>
               </motion.div>
-            ))}
+            </motion.div>
+          ))}
         </div>
       </div>
 
+      {/* Modal */}
       <AnimatePresence>
-        {modalAberto && textoSelecionado && (
+        {modalAberto && textoSelecionado && personagemSelecionado && (
           <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            onClick={fecharModal}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center p-3"
-            style={{ background: "rgba(0, 0, 0, 0.7)", zIndex: 9999, backdropFilter: "blur(5px)" }}
-            onClick={fecharModal}
           >
             <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              className="card shadow-lg"
-              style={{
-                maxWidth: "800px",
-                width: "100%",
-                maxHeight: "80vh",
-                background: "rgba(255, 255, 255, 0.98)",
-                backdropFilter: "blur(10px)",
-              }}
+              className="flex flex-col w-full max-w-4xl max-h-[90vh] bg-white rounded-3xl shadow-2xl overflow-hidden border border-white/30"
               onClick={(e) => e.stopPropagation()}
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 250, damping: 25 }}
             >
-              <div
-                className="card-header text-white d-flex justify-content-between align-items-center"
-                style={{ background: personagemSelecionado?.cor ?? undefined }}
-              >
-                <div className="d-flex align-items-center">
-                  {getIconeTipo(textoSelecionado?.tipo)}
-                  <h5 className="mb-0 ms-2">{textoSelecionado?.titulo}</h5>
+              {/* Header */}
+              <div className="flex items-center justify-between p-6 text-white" style={{ background: personagemSelecionado.cor }}>
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                    {textoSelecionado.tipo === "carta" && <Mail size={20} />}
+                    {textoSelecionado.tipo === "artigo" && <FileText size={20} />}
+                    {textoSelecionado.tipo === "entrevista" && <MessageSquare size={20} />}
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold">{textoSelecionado.titulo}</h2>
+                    <p className="text-sm opacity-90">{personagemSelecionado.nome}</p>
+                  </div>
                 </div>
-                <button className="btn btn-link text-white p-0" onClick={fecharModal} style={{ textDecoration: "none" }}>
+                <motion.button
+                  className="p-2 hover:bg-white/20 rounded-xl transition"
+                  whileHover={{ rotate: 90 }}
+                  onClick={fecharModal}
+                >
                   <X size={24} />
-                </button>
+                </motion.button>
               </div>
 
-              <div className="card-body p-4" style={{ overflowY: "auto", maxHeight: "calc(80vh - 120px)" }}>
-                <div className="mb-3 text-center">
-                  <span className="badge text-white px-3 py-2" style={{ background: personagemSelecionado?.cor }}>
-                    {personagemSelecionado?.nome}
-                  </span>
-                </div>
-                <div style={{ whiteSpace: "pre-line", lineHeight: "1.8" }}>{textoSelecionado?.conteudo}</div>
+              {/* Conteúdo */}
+              <div className="flex-1 overflow-y-auto p-8 bg-gradient-to-br from-gray-50 to-white">
+                <p className="whitespace-pre-line text-gray-700 text-base md:text-lg leading-relaxed">
+                  {textoSelecionado.conteudo}
+                </p>
               </div>
 
-              <div className="card-footer bg-light text-center">
-                <button className="btn btn-secondary" onClick={fecharModal}>
+              {/* Footer */}
+              <div className="bg-gray-50/80 backdrop-blur-sm border-t border-gray-200/50 p-6 flex justify-center">
+                <motion.button
+                  className="px-8 py-3 bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-800 hover:to-black text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={fecharModal}
+                >
                   Fechar
-                </button>
+                </motion.button>
               </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
-  )
-
-
-} 
+    </section>
+  );
+}

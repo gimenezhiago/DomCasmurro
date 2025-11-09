@@ -8,7 +8,7 @@ const fadeIn = {
 
 export default function Autor() {
   return (
-    <section className="py-5">
+    <section className="py-5 bg-light">
       <div className="container">
         <motion.div
           initial="hidden"
@@ -17,55 +17,62 @@ export default function Autor() {
           variants={fadeIn}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-center mb-4">
+          <h2 className="text-center fw-bold mb-5 text-danger">
             <BookOpen
               size={32}
-              className="me-2"
-              style={{ display: "inline-block", verticalAlign: "middle" }}
+              className="me-2 mb-1"
+              style={{ verticalAlign: "middle" }}
             />
             Sobre o Autor
           </h2>
+
           <motion.div
-            className="card shadow-lg"
+            className="card border-0 shadow-lg mx-auto"
             style={{
-              background: "rgba(255, 255, 255, 0.95)",
+              maxWidth: "900px",
+              background: "rgba(255, 255, 255, 0.96)",
               backdropFilter: "blur(10px)",
-              border: "none",
+              borderRadius: "1rem",
             }}
             whileHover={{ scale: 1.01 }}
-            transition={{ type: "spring", stiffness: 300 }}
+            transition={{ type: "spring", stiffness: 250 }}
           >
-            <div className="card-body p-4">
-              <div className="row">
-                <div className="col-md-4 text-center mb-3 mb-md-0">
+            <div className="card-body p-4 p-md-5">
+              <div className="row align-items-center">
+                <div className="col-md-4 text-center mb-4 mb-md-0">
                   <div
-                    className="text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                    className="rounded-circle d-inline-flex align-items-center justify-content-center shadow"
                     style={{
                       width: "150px",
                       height: "150px",
-                      background:
-                        "red",
+                      background: "linear-gradient(135deg, #c62828, #8e0000)",
                     }}
                   >
-                    <User size={80} />
+                    <User size={80} className="text-white" />
                   </div>
-                  <h5>Joaquim Maria Machado de Assis</h5>
-                  <p className="text-muted">1839 - 1908</p>
+                  <h5 className="fw-semibold mt-3 mb-1">
+                    Joaquim Maria Machado de Assis
+                  </h5>
+                  <p className="text-muted">1839 – 1908</p>
                 </div>
+
                 <div className="col-md-8">
-                  <p>
-                    <strong>Machado de Assis</strong> é considerado o maior
-                    escritor brasileiro de todos os tempos e um dos maiores da
-                    literatura mundial.
+                  <p className="lh-lg">
+                    <strong>Machado de Assis</strong> é amplamente considerado o
+                    maior escritor brasileiro de todos os tempos e uma das
+                    figuras mais importantes da literatura mundial.
                   </p>
-                  <p>
-                    Fundador da Academia Brasileira de Letras, Machado
-                    revolucionou a literatura brasileira com sua narrativa
-                    inovadora, ironia refinada e profunda análise psicológica
-                    dos personagens.
+                  <p className="lh-lg">
+                    Fundador da <strong>Academia Brasileira de Letras</strong>,
+                    Machado revolucionou a literatura brasileira com sua
+                    narrativa inovadora, ironia refinada e profunda análise
+                    psicológica dos personagens.
                   </p>
-                  <h6 className="mt-4">Principais Obras:</h6>
-                  <ul>
+
+                  <h6 className="fw-bold mt-4 mb-3 text-danger">
+                    Principais Obras:
+                  </h6>
+                  <ul className="mb-0 lh-lg">
                     <li>Memórias Póstumas de Brás Cubas (1881)</li>
                     <li>Quincas Borba (1891)</li>
                     <li>Dom Casmurro (1899)</li>
