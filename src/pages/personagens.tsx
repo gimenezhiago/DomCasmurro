@@ -4,6 +4,7 @@ import { User, Mail, FileText, MessageSquare, ArrowLeft, X, Users } from "lucide
 import { Link } from "react-router-dom";
 import personagens from "../components/personagensText.ts";
 
+// Interfaces
 interface TextoConteudo {
   titulo: string;
   conteudo: string;
@@ -28,22 +29,46 @@ interface TextoSelecionado extends TextoConteudo {
 
 type TipoTexto = "carta" | "artigo" | "entrevista";
 
-const fadeIn = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+// Configurações de animação
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
 };
 
+// Configurações dos botões
 const BOTOES_CONFIG = [
-  { tipo: "carta" as const, label: "Carta", icone: Mail, gradient: "from-red-500 to-rose-600" },
-  { tipo: "artigo" as const, label: "Artigo", icone: FileText, gradient: "from-rose-500 to-pink-600" },
-  { tipo: "entrevista" as const, label: "Entrevista", icone: MessageSquare, gradient: "from-pink-500 to-red-600" },
+  { 
+    tipo: "carta" as const, 
+    label: "Carta", 
+    icone: Mail, 
+    gradient: "from-red-500 to-rose-600" 
+  },
+  { 
+    tipo: "artigo" as const, 
+    label: "Artigo", 
+    icone: FileText, 
+    gradient: "from-rose-500 to-pink-600" 
+  },
+  { 
+    tipo: "entrevista" as const, 
+    label: "Entrevista", 
+    icone: MessageSquare, 
+    gradient: "from-pink-500 to-red-600" 
+  },
 ];
 
+// Componente principal
 export default function Personagens() {
   const [personagemSelecionado, setPersonagemSelecionado] = useState<Personagem | null>(null);
   const [textoSelecionado, setTextoSelecionado] = useState<TextoSelecionado | null>(null);
   const [modalAberto, setModalAberto] = useState(false);
 
+  // Funções de manipulação
   const abrirTexto = (personagem: Personagem, tipo: TipoTexto) => {
     setPersonagemSelecionado(personagem);
     setTextoSelecionado({
@@ -62,11 +87,23 @@ export default function Personagens() {
     }, 300);
   };
 
+  const getIcone = (tipo: TipoTexto) => {
+    switch (tipo) {
+      case "carta": return Mail;
+      case "artigo": return FileText;
+      case "entrevista": return MessageSquare;
+    }
+  };
+
   return (
     <section className="min-h-screen bg-gradient-to-br from-rose-50 via-red-50 to-pink-50 py-10">
       <div className="container mx-auto px-6">
         {/* Botão Voltar */}
-        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           <Link
             to="/"
             className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 mb-8"
@@ -79,10 +116,9 @@ export default function Personagens() {
         {/* Header */}
         <motion.div
           className="text-center mb-12"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={fadeIn}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
         >
           <motion.div
             className="inline-flex items-center gap-3 bg-white/80 backdrop-blur-sm rounded-2xl px-8 py-4 shadow-lg mb-6"
@@ -105,21 +141,23 @@ export default function Personagens() {
         </motion.div>
 
         {/* Grid de Personagens */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {personagens.map((personagem, index) => (
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          {personagens.map((personagem) => (
             <motion.div
               key={personagem.id}
-              variants={fadeIn}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ delay: index * 0.1 }}
               className="flex"
             >
               <motion.div
-                className="group flex-1 bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+                className="group flex-1 bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 overflow-hidden transition-all duration-300 hover:shadow-2xl"
+                whileHover={{ y: -5 }}
               >
                 <div className="p-6 flex flex-col h-full text-center">
+                  {/* Avatar */}
                   <motion.div
                     className="relative mb-5 mx-auto"
                     whileHover={{ rotate: [0, -5, 5, 0] }}
@@ -133,20 +171,21 @@ export default function Personagens() {
                     </div>
                   </motion.div>
 
+                  {/* Informações */}
                   <h3 className="text-2xl font-bold text-gray-800 mb-1">{personagem.nome}</h3>
                   <p className="text-sm text-gray-500 mb-3 font-medium">{personagem.nomeCompleto}</p>
-
                   <p className="text-gray-600 mb-6 text-sm leading-relaxed flex-grow">
                     {personagem.descricao}
                   </p>
 
+                  {/* Botões de ação */}
                   <div className="space-y-3 mt-auto">
                     {BOTOES_CONFIG.map(({ tipo, label, icone: Icone, gradient }) => (
                       <motion.button
                         key={tipo}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className={`w-full flex items-center justify-center gap-3 py-3 px-4 bg-gradient-to-r ${gradient} text-white font-semibold rounded-xl shadow-md hover:shadow-lg`}
+                        className={`w-full flex items-center justify-center gap-3 py-3 px-4 bg-gradient-to-r ${gradient} text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-200`}
                         onClick={() => abrirTexto(personagem, tipo)}
                       >
                         <Icone size={18} />
@@ -158,7 +197,7 @@ export default function Personagens() {
               </motion.div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
 
       {/* Modal */}
@@ -179,13 +218,17 @@ export default function Personagens() {
               exit={{ scale: 0.9, opacity: 0 }}
               transition={{ type: "spring", stiffness: 250, damping: 25 }}
             >
-              {/* Header */}
-              <div className="flex items-center justify-between p-6 text-white" style={{ background: personagemSelecionado.cor }}>
+              {/* Header do Modal */}
+              <div 
+                className="flex items-center justify-between p-6 text-white" 
+                style={{ background: personagemSelecionado.cor }}
+              >
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
-                    {textoSelecionado.tipo === "carta" && <Mail size={20} />}
-                    {textoSelecionado.tipo === "artigo" && <FileText size={20} />}
-                    {textoSelecionado.tipo === "entrevista" && <MessageSquare size={20} />}
+                    {(() => {
+                      const Icone = getIcone(textoSelecionado.tipo);
+                      return <Icone size={20} />;
+                    })()}
                   </div>
                   <div>
                     <h2 className="text-xl font-bold">{textoSelecionado.titulo}</h2>
@@ -193,7 +236,7 @@ export default function Personagens() {
                   </div>
                 </div>
                 <motion.button
-                  className="p-2 hover:bg-white/20 rounded-xl transition"
+                  className="p-2 hover:bg-white/20 rounded-xl transition-colors duration-200"
                   whileHover={{ rotate: 90 }}
                   onClick={fecharModal}
                 >
@@ -201,14 +244,14 @@ export default function Personagens() {
                 </motion.button>
               </div>
 
-              {/* Conteúdo */}
+              {/* Conteúdo do Modal */}
               <div className="flex-1 overflow-y-auto p-8 bg-gradient-to-br from-gray-50 to-white">
                 <p className="whitespace-pre-line text-gray-700 text-base md:text-lg leading-relaxed">
                   {textoSelecionado.conteudo}
                 </p>
               </div>
 
-              {/* Footer */}
+              {/* Footer do Modal */}
               <div className="bg-gray-50/80 backdrop-blur-sm border-t border-gray-200/50 p-6 flex justify-center">
                 <motion.button
                   className="px-8 py-3 bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-800 hover:to-black text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
