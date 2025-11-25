@@ -54,13 +54,17 @@ export default function Professora() {
 
                 <div className="col-md-8">
                   <h4 className="fw-semibold mb-2">
-                    Profa. Dra. Mariana Rodrigues
+                    Profa. Sandra Elis Aleixo
                   </h4>
                   <p className="text-muted mb-0 lh-lg">
-                    Especialista em Literatura Brasileira do século XIX, com
-                    doutorado pela USP. Dedica-se ao estudo da obra de Machado
-                    de Assis há mais de 15 anos, inspirando alunos a compreender
-                    as nuances sociais e psicológicas presentes em suas obras.
+                    Possui graduação em Letras Anglo Portuguesas pela Faculdade
+                    Estadual de Ciências e Letras de Campo Mourão(1996),
+                    especialização em Literatura Brasileira pela Faculdade
+                    Estadual de Ciências e Letras de Campo Mourão(1998) e
+                    mestrado pela Universidade Estadual Paulista Júlio de
+                    Mesquita Filho(2002). Atualmente é Professor BTT da
+                    Universidade Tecnológica Federal do Paraná. Tem experiência
+                    na área de Letras, com ênfase em Língua Portuguesa.
                   </p>
                 </div>
               </div>

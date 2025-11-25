@@ -87,7 +87,7 @@ export default function Principal() {
               style={{ display: "inline-block", verticalAlign: "middle" }}
             />
             <span className="fw-semibold">
-              Projeto Dom Casmurro — Literatura Brasileira 2024
+              Projeto Dom Casmurro
             </span>
           </p>
         </div>
